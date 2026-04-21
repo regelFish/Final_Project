@@ -52,20 +52,59 @@ def sample_from_mixture_model(model, n_samples=1, random_state=None):
 
 def run_delay_simulation(model, n_steps=100, initial_delay=0.0, random_state=None):
     """
-    Example numerical simulation using a fitted mixture model.
-    Each step adds one sampled delay increment to the running total.
+    Numerical simulation using a fitted mixture model.
+    The sampled values are simulated delays, and their cumulative sum is also
+    returned in case you want a running-delay simulation.
     """
-    delay_increments = sample_from_mixture_model(
+    delay_samples = sample_from_mixture_model(
         model,
         n_samples=n_steps,
         random_state=random_state
     )
 
-    cumulative_delays = initial_delay + np.cumsum(delay_increments)
+    cumulative_delays = initial_delay + np.cumsum(delay_samples)
     return {
-        'increments': delay_increments,
+        'samples': delay_samples,
+        'increments': delay_samples,
         'cumulative_delays': cumulative_delays
     }
+
+
+def plot_simulation_vs_real_data(model, simulation_result, bins=300):
+    """
+    Overlay a histogram of simulated delays with the histogram of the real data.
+    """
+    real_delays = np.asarray(model.get('observed_delays', []), dtype=float)
+    simulated_delays = np.asarray(simulation_result.get('samples', []), dtype=float)
+
+    if real_delays.size == 0:
+        raise ValueError('Model does not contain observed_delays to compare against.')
+    if simulated_delays.size == 0:
+        raise ValueError('Simulation result does not contain sampled delays to plot.')
+
+    plt.figure(figsize=(12, 7))
+    plt.hist(real_delays, bins=bins, density=True, alpha=0.35,
+             label='Real Data')
+    plt.hist(simulated_delays, bins=bins, density=True, alpha=0.35,
+             label='Simulated Data')
+
+    if model.get('pdf') is not None and model.get('x_grid') is not None:
+        plt.plot(model['x_grid'], model['pdf'], 'r-', lw=2.5,
+                 label='Fitted Mixture PDF')
+
+    plt.axvline(np.mean(real_delays), color='blue', linestyle='--', linewidth=2,
+                label=f'Real Mean: {np.mean(real_delays):.1f}')
+    plt.axvline(np.mean(simulated_delays), color='orange', linestyle='--', linewidth=2,
+                label=f'Simulated Mean: {np.mean(simulated_delays):.1f}')
+
+    route_id = model.get('route_id', 'Unknown Route')
+    plt.xlabel('Delay (seconds)')
+    plt.ylabel('Density')
+    plt.title(f'{route_id}: Simulated Delay Histogram vs Real Data')
+    plt.xlim(-2100, 2100)
+    plt.grid(alpha=0.3)
+    plt.legend()
+    plt.show()
 
 def graph_data():
     data = pd.read_csv("final_delays_with_dates.csv")
@@ -628,7 +667,8 @@ def create_X_line_model(X):
         'mixture_mean': mixture_mean,
         'x_grid': x,
         'pdf': combined_pdf,
-        'summary': summary_by_weight.reset_index(drop=True)
+        'summary': summary_by_weight.reset_index(drop=True),
+        'observed_delays': data['delay_sec'].to_numpy()
     }
 
 def create_X_line_modelK(Y, K):
@@ -721,7 +761,8 @@ def create_X_line_modelK(Y, K):
         'mixture_mean': mixture_mean,
         'x_grid': x,
         'pdf': pdf,
-        'summary': summary
+        'summary': summary,
+        'observed_delays': data['delay_sec'].to_numpy()
     }
 
 def main():
