@@ -783,7 +783,7 @@ def main():
         print("\nConditional-model simulation results:")
         print("First 10 delay increments:", conditional_simulation['increments'][:10])
         print("First 10 cumulative delays:", conditional_simulation['cumulative_delays'][:10])
-        plot_simulation_vs_real_data(conditional_model, conditional_simulation)
+        plot_simulation_vs_real_data(conditional_model, conditional_simulation, bins=1000)
 
     if global_model is not None:
         global_simulation = run_delay_simulation(
@@ -795,7 +795,7 @@ def main():
         print("\nGlobal-model simulation results:")
         print("First 10 delay increments:", global_simulation['increments'][:10])
         print("First 10 cumulative delays:", global_simulation['cumulative_delays'][:10])
-        plot_simulation_vs_real_data(global_model, global_simulation, bins=300)
+        plot_simulation_vs_real_data(global_model, global_simulation, bins=1000)
 
 
 if __name__ == "__main__":
