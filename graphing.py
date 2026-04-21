@@ -497,7 +497,7 @@ def create_X_line_model(X):
     # data = data[(data['delay_sec'] > -2000) & (data['delay_sec'] < 2000)]
     # data['delay_sec'] = np.clip(data['delay_sec'], -1200, 1200)
 
-    # Filter to B line only
+    # Filter to X line only
     data = data[data['route_id'] == 'Green-' + X].copy()
     data = data.dropna(subset=['delay_sec', 'precipitation', 'to_stop_arrival_datetime'])
 
@@ -770,8 +770,8 @@ def main():
     # create_model()
     # create_deranged_model()
 
-    conditional_model = create_X_line_model('C')
-    global_model = create_X_line_modelK('C', 4)
+    conditional_model = create_X_line_model('E')
+    global_model = create_X_line_modelK('E', 4)
 
     if conditional_model is not None:
         conditional_simulation = run_delay_simulation(
@@ -795,7 +795,7 @@ def main():
         print("\nGlobal-model simulation results:")
         print("First 10 delay increments:", global_simulation['increments'][:10])
         print("First 10 cumulative delays:", global_simulation['cumulative_delays'][:10])
-        plot_simulation_vs_real_data(global_model, global_simulation, bins=1000)
+        plot_simulation_vs_real_data(global_model, global_simulation, bins=300)
 
 
 if __name__ == "__main__":
