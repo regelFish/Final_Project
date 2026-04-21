@@ -776,24 +776,26 @@ def main():
     if conditional_model is not None:
         conditional_simulation = run_delay_simulation(
             conditional_model,
-            n_steps=50,
+            n_steps=10000,
             initial_delay=0.0,
             random_state=42
         )
         print("\nConditional-model simulation results:")
         print("First 10 delay increments:", conditional_simulation['increments'][:10])
         print("First 10 cumulative delays:", conditional_simulation['cumulative_delays'][:10])
+        plot_simulation_vs_real_data(conditional_model, conditional_simulation)
 
     if global_model is not None:
         global_simulation = run_delay_simulation(
             global_model,
-            n_steps=50,
+            n_steps=10000,
             initial_delay=0.0,
             random_state=42
         )
         print("\nGlobal-model simulation results:")
         print("First 10 delay increments:", global_simulation['increments'][:10])
         print("First 10 cumulative delays:", global_simulation['cumulative_delays'][:10])
+        plot_simulation_vs_real_data(global_model, global_simulation, bins=300)
 
 
 if __name__ == "__main__":
