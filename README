@@ -14,13 +14,19 @@ Data Collection
 
 - theBigUnzip.ipynb
   - Get the links to zip files of the archive data from https://cdn.mbta.com/archive/archived_feeds.txt (would use equivalent schedule data if you were to analyze some other train system)
-  - 
+  - Put all the wanted archived schedule data into a parquet file
 
-
+- Trains.ipynb (Part 2)
+    - Merge the train arrival and weather data information with the archived schedule data
+    - Calculate the difference between the scheduled arrival time and the actual arrival time
+    - Create CSV file for data processing and modeling
 
 
 Data Processing and Modeling
 - Use the graphing.py file to process the resulting CSV files
-      - Do the final processing of data for modeling (removes
-      - provides both exploratory results (to get graphs of the overall distriubtion of delay
-      - Implements the sci-learn Gaussian inferencer 
+      - Do the final processing of data for modeling (place rain amounts into buckets, place dates into seasons, and handle date overflow from calculating delays)
+      - provides both exploratory results (to get graphs of the overall distribution of delay, and with initial parameters like season, amount of precipitation, and train line) 
+      - Implements the scikit-learn Expectation-Maximization Gaussian Modeler to create a probabilistic model of our train delays
+      - Creates final charts of the probabilistic model and compares the model to the initial dataset
+        - Users can create models of the other trains besides the ones shown in the presenation
+
