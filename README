@@ -1,15 +1,26 @@
 Data Collection
 
 (Was done on the Tufts High Performance Cluster w/ 16 cores and 200 GB of memory)
+- Weather Data
+    - Use the open-mateo historical weather API
+        - Select parameters for date range (1/1/2025 - 12/31/2025), location (Boston), hourly weather variables (precipitation), and use the resulting api link
 
+- Train Arrival Data
+  - Use the MBTA Blue Book Open Data for MBTA Rapid Transit Travel Times 2025 (https://mbta-massdot.opendata.arcgis.com/datasets/5f71a5c035fc4a4dad1b7fa73ba27ef8/about)
+  - For our project, you only needed to use the LRT travel times, but trains.ipynb uses all train data
 
+- Trains.ipynb (Part 1)
+ -  Use this Jupyter notebook to merge the information on train arrival time with weather data, and put all this information into a parquet file
 
-
-
-
+- theBigUnzip.ipynb
+  - Get the links to zip files of the archive data from https://cdn.mbta.com/archive/archived_feeds.txt (would use equivalent schedule data if you were to analyze some other train system)
+  - 
 
 
 
 
 Data Processing and Modeling
-- Use 
+- Use the graphing.py file to process the resulting CSV files
+      - Do the final processing of data for modeling (removes
+      - provides both exploratory results (to get graphs of the overall distriubtion of delay
+      - Implements the sci-learn Gaussian inferencer 
